@@ -1,0 +1,44 @@
+import { useEffect, useState } from 'react';
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3 } from 'lucide-react';
+import { useBookingStore } from '@/stores/booking';
+import { salons } from '@/data/salons';
+
+const services = [
+  { name: 'Classic haircut', detail: 'Cut, wash & style · 45 min', price: '$36' },
+  { name: 'Skin fade', detail: 'Precision fade · 50 min', price: '$42' },
+  { name: 'Beard trim', detail: 'Shape & hot towel · 30 min', price: '$24' },
+  { name: 'Haircut & beard', detail: 'The complete refresh · 70 min', price: '$55' },
+];
+const stylists = ['Alexander Scott', 'J. Smith', 'S. Johnson'];
+const times = ['9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '4:30 PM'];
+
+export default function BookingFlow() {
+  const [shopName, setShopName] = useState('Classic Cuts Barber Shop');
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('shop');
+    const selectedShop = salons.find((salon) => salon.slug === slug);
+    if (selectedShop) setShopName(selectedShop.name);
+  }, []);
+  const { service, stylist, date, time, step, customerName, customerEmail, setField, setStep } = useBookingStore();
+  const [attempted, setAttempted] = useState(false);
+  const [showNotice, setShowNotice] = useState(false);
+  const ready = step === 1 ? Boolean(service) : step === 2 ? Boolean(stylist) : step === 3 ? Boolean(date && time) : Boolean(customerName.trim() && customerEmail.includes('@'));
+  const next = () => { setAttempted(true); if (ready) { setAttempted(false); setStep(step + 1); } };
+
+  return <div className="booking-flow card">
+    <div className="shop-context"><span>Booking at</span><strong>{shopName}</strong></div>
+    <div className="stepper" aria-label={`Step ${step} of 4`}>{['Service', 'Barber', 'Time', 'Details'].map((label, index) => <div className={`step ${step >= index + 1 ? 'done' : ''}`} key={label}><span>{step > index + 1 ? <Check size={14} /> : index + 1}</span><small>{label}</small></div>)}</div>
+    <div className="flow-content">
+      {step === 1 && <><div className="flow-title"><span className="eyebrow">Step 01</span><h2>Choose your service</h2><p>Pick the appointment that suits you.</p></div><div className="choice-list">{services.map((option) => <button key={option.name} type="button" className={`choice-card ${service === option.name ? 'selected' : ''}`} onClick={() => setField('service', option.name)}><span className="choice-check">{service === option.name && <Check size={14} />}</span><span className="choice-copy"><strong>{option.name}</strong><small>{option.detail}</small></span><b>{option.price}</b></button>)}</div></>}
+      {step === 2 && <><div className="flow-title"><span className="eyebrow">Step 02</span><h2>Pick your barber</h2><p>Every appointment includes a personal consultation.</p></div><div className="stylist-list">{stylists.map((name, index) => <button key={name} className={`stylist-choice ${stylist === name ? 'selected' : ''}`} onClick={() => setField('stylist', name)}><img src={index === 1 ? '/images/barber-stylist.jpg' : '/images/barber-stylist.jpg'} alt="" width="58" height="58" /><span><strong>{name}</strong><small>Senior barber · 4.9 rating</small></span><span className="choice-check">{stylist === name && <Check size={14} />}</span></button>)}</div></>}
+      {step === 3 && <><div className="flow-title"><span className="eyebrow">Step 03</span><h2>Select a date & time</h2><p>Choose an available appointment slot.</p></div><label className="field-label"><span><CalendarDays size={17} /> Appointment date</span><input className="form-control" type="date" min={new Date().toISOString().slice(0, 10)} value={date} onChange={(event) => setField('date', event.target.value)} /></label><div className="time-grid">{times.map((slot) => <button key={slot} className={`time-chip ${time === slot ? 'selected' : ''}`} onClick={() => setField('time', slot)}><Clock3 size={15} />{slot}</button>)}</div></>}
+      {step === 4 && <><div className="flow-title"><span className="eyebrow">Step 04</span><h2>Your contact details</h2><p>We’ll use these details for the appointment request.</p></div><label className="field-label">Full name<input className="form-control" value={customerName} onChange={(event) => setField('customerName', event.target.value)} placeholder="Your name" autoComplete="name" /></label><label className="field-label">Email address<input className="form-control" type="email" value={customerEmail} onChange={(event) => setField('customerEmail', event.target.value)} placeholder="you@example.com" autoComplete="email" /></label><div className="review-box"><strong>Appointment summary</strong><span>{service} with {stylist}</span><span>{date || 'Choose a date'} at {time || 'Choose a time'}</span><b>{services.find((item) => item.name === service)?.price}</b></div></>}
+      {attempted && !ready && <p className="field-error" role="alert">Please complete the required selection before continuing.</p>}
+      {showNotice && <div className="integration-note" role="status"><strong>Request ready, but not sent.</strong><span>This storefront has no booking provider connected. Your selections are saved on this page; connect a scheduling service to submit bookings.</span></div>}
+      <div className="flow-actions">{step > 1 && <button className="button button-outline" onClick={() => { setShowNotice(false); setStep(step - 1); }}><ChevronLeft size={17} /> Back</button>}{step < 4 ? <button className="button" onClick={next}>Continue <ChevronRight size={17} /></button> : <button className="button" onClick={() => { setAttempted(true); if (ready) setShowNotice(true); }}>Review request <Check size={17} /></button>}</div>
+    </div>
+    <style>{`
+      .booking-flow{display:grid;grid-template-columns:210px 1fr;overflow:hidden}.shop-context{grid-column:1/-1;display:flex;gap:7px;padding:17px 25px;border-bottom:1px solid #edf0f3;color:#8791a2;font-size:13px}.shop-context strong{color:#171a20}.stepper{background:#f8fafb;padding:30px 24px;display:flex;flex-direction:column;gap:0}.step{display:flex;align-items:center;gap:12px;min-height:54px;color:#9199a8;position:relative}.step:not(:last-child):after{content:'';position:absolute;left:15px;top:39px;height:28px;border-left:1px solid #dce1e8}.step>span{display:grid;place-items:center;width:31px;height:31px;border:1px solid #d8dde5;border-radius:50%;background:white;font-size:12px;z-index:1}.step.done{color:#38767d;font-weight:650}.step.done>span{border-color:#48858c;background:#48858c;color:white}.step small{font-size:13px}.flow-content{padding:36px}.flow-title h2{margin:6px 0;font-size:23px;letter-spacing:-.04em}.flow-title p{margin:0;color:#7f8a9e}.choice-list,.stylist-list{display:grid;gap:11px;margin-top:26px}.choice-card,.stylist-choice{width:100%;display:flex;align-items:center;gap:13px;padding:15px;border:1px solid #e5e8ee;border-radius:14px;background:white;text-align:left}.choice-card.selected,.stylist-choice.selected,.time-chip.selected{border-color:#48858c;background:#f4f9f9}.choice-check{width:21px;height:21px;display:grid;place-items:center;border:1px solid #d1d8e2;border-radius:50%;color:white;flex:none}.selected .choice-check{border-color:#48858c;background:#48858c}.choice-copy{display:grid;gap:3px;flex:1}.choice-copy small,.stylist-choice small{color:#7f8a9e}.choice-card>b{font-weight:700}.stylist-choice img{width:58px;height:58px;border-radius:50%;object-fit:cover}.stylist-choice>span:nth-child(2){display:grid;gap:3px;flex:1}.field-label{display:grid;gap:8px;margin-top:22px;font-weight:600}.field-label>span{display:flex;gap:8px;align-items:center}.field-label>span svg{color:#48858c}.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.time-chip{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;border:1px solid #e1e5eb;border-radius:11px;background:white;color:#657186}.time-chip.selected{color:#38767d}.review-box{display:grid;gap:9px;margin-top:22px;padding:18px;background:#f6f8fa;border-radius:14px;color:#778297}.review-box strong{color:#171a20}.review-box b{color:#171a20;font-size:18px}.flow-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:28px}.field-error{color:#c9364c;font-size:13px}.integration-note{display:grid;gap:5px;padding:14px;border-radius:12px;background:#fff7e8;color:#6f5b36;font-size:13px}.integration-note strong{color:#54421f}@media(max-width:767px){.booking-flow{display:block}.stepper{flex-direction:row;justify-content:space-between;gap:0;padding:15px 18px}.step{flex-direction:column;gap:5px;min-height:auto}.step:not(:last-child):after{left:calc(50% + 18px);top:15px;width:calc(100% - 25px);height:0;border-left:0;border-top:1px solid #dce1e8}.step small{font-size:10px}.step>span{width:29px;height:29px}.flow-content{padding:25px 20px}.flow-title h2{font-size:21px}.time-grid{grid-template-columns:repeat(2,1fr)}.flow-actions .button{flex:1}}
+    `}</style>
+  </div>;
+}

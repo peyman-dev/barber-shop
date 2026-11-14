@@ -1,0 +1,22 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import DiscoveryPanel from '@/features/discovery/DiscoveryPanel';
+import { salons } from '@/data/salons';
+---
+<MainLayout title="Explore barbershops | Barberly" description="Search local barbershops and find a service that fits your style." active="explore">
+  <div class="shell page-content explore-page">
+    <div class="page-heading"><span class="heading-spacer"></span><h1>Explore</h1><a class="icon-button" href="/services/haircuts" aria-label="Saved favourites"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 8.9c0 5.5-8.8 11-8.8 11s-8.8-5.5-8.8-11a4.7 4.7 0 0 1 8.8-2.4 4.7 4.7 0 0 1 8.8 2.4Z"/></svg></a></div>
+    <div class="desktop-results"><DiscoveryPanel client:load salons={salons} title="Browse barbershops" /></div>
+    <div class="recent-search"><div class="section-heading"><h2>Recent search</h2><button class="text-link clear-recent" type="button">Clear all</button></div><div class="chips"><button class="pill">Kids Haircut <span>×</span></button><button class="pill">Hair Repair Treatment <span>×</span></button><button class="pill">Basic Hair Color <span>×</span></button><button class="pill">Beard Shaving <span>×</span></button></div></div>
+    <section class="recently-viewed"><div class="section-heading"><h2>Recently viewed</h2><a href="/services/haircuts">See all</a></div><div class="recent-list">{salons.slice(0, 2).map((salon) => <a class="card recent-card" href={`/salon/${salon.slug}`}><img src={salon.image} alt="" width="78" height="78"/><div class="salon-info"><h3>{salon.name}</h3><p>{salon.address}</p><div class="meta-row"><span>{salon.distance}</span><span>★ {salon.rating} ({salon.reviews} reviews)</span></div></div></a>)}</div></section>
+  </div>
+</MainLayout>
+<script>
+  document.querySelector('.clear-recent')?.addEventListener('click', () => {
+    document.querySelector('.recent-search')?.classList.add('cleared');
+  });
+  document.querySelectorAll('.chips .pill').forEach((chip) => chip.addEventListener('click', () => chip.remove()));
+</script>
+<style>
+.explore-page{padding-top:30px}.page-heading{position:relative}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%)}.heading-spacer{width:46px}.recent-search .section-heading{margin-top:8px}.chips{display:flex;flex-wrap:wrap;gap:10px}.chips .pill{border:0;font-size:13px}.chips .pill span{font-size:18px;line-height:12px}.recent-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}.recent-card{display:flex;align-items:center;gap:14px;padding:13px;min-width:0}.recent-card img{width:78px;height:78px;object-fit:cover;border-radius:12px}.recent-card .salon-info h3{font-size:14px}.recent-card .meta-row{font-size:13px}.desktop-results{margin-top:42px}.cleared .chips{display:none}@media(max-width:767px){.explore-page{padding-top:0}.page-heading{margin-bottom:18px}.desktop-results{margin:0}.desktop-results>.section-heading,.desktop-results>.result-list{display:none}.desktop-results>.section-heading.show-results{display:flex}.desktop-results>.result-list.show-results{display:grid}.recent-search .section-heading{margin:28px 0 14px}.chips{gap:9px}.chips .pill{padding:7px 12px}.recent-list{grid-template-columns:1fr}.recently-viewed .section-heading{margin-top:28px}.recent-card{min-height:108px}}
+</style>

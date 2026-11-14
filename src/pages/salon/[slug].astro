@@ -1,0 +1,15 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import SalonDetail from '@/features/discovery/SalonDetail';
+import { salons } from '@/data/salons';
+import type { Salon } from '@/data/salons';
+
+export function getStaticPaths() {
+  return salons.map((salon) => ({ params: { slug: salon.slug }, props: { salon } }));
+}
+const { salon } = Astro.props as { salon: Salon };
+---
+<MainLayout title={`${salon.name} | Barberly`} description={`Explore services, ratings and booking information for ${salon.name}.`} active="services" showBottomNav={false}>
+  <div class="salon-page"><SalonDetail client:load salon={salon} /></div>
+</MainLayout>
+<style>.salon-page{padding-bottom:0}@media(min-width:768px){.salon-page{background:#f5f7fa;padding-bottom:50px}.salon-page .salon-cover{max-width:1120px;height:430px;margin:0 auto;border-radius:22px;overflow:hidden}.salon-page .salon-panel{border-radius:0 0 24px 24px}}</style>

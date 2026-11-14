@@ -1,0 +1,13 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import BookingDashboard from '@/features/booking/BookingDashboard';
+---
+<MainLayout title="My bookings | Barberly" description="Manage upcoming barber appointments and review past bookings." active="bookings">
+  <div class="shell page-content bookings-page">
+    <div class="page-heading"><span class="heading-spacer"></span><h1>My Bookings</h1><a class="icon-button" href="/booking-details" aria-label="Search bookings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.3 4.3"/></svg></a></div>
+    <BookingDashboard client:load />
+    <div class="booking-cta"><p>Looking for your next appointment?</p><a class="button" href="/salon/classic-cuts">Book a barber</a></div>
+  </div>
+</MainLayout>
+<style>.bookings-page{padding-top:28px}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%)}.heading-spacer{width:46px}.booking-cta{display:none}@media(min-width:768px){.bookings-page{max-width:750px;padding-top:35px}.booking-cta{display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding:20px 24px;border-radius:16px;background:#eaf2f3}.booking-cta p{margin:0;color:#4d6570}.bookings-page .booking-tabs{max-width:350px}.bookings-page .booking-card{max-width:650px}.page-heading h1{position:static;transform:none}.page-heading{justify-content:flex-start}.heading-spacer{display:none}}
+</style>

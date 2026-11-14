@@ -1,0 +1,8 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import SalonDetail from '@/features/discovery/SalonDetail';
+---
+<MainLayout title="Classic Cuts Barber Shop | Barberly" description="Explore the services, specialists and gallery at Classic Cuts Barber Shop." active="services" showBottomNav={false}>
+  <div class="salon-page"><SalonDetail client:load /></div>
+</MainLayout>
+<style>.salon-page{padding-bottom:0}@media(min-width:768px){.salon-page{background:#f5f7fa;padding-bottom:50px}.salon-page .salon-cover{max-width:1120px;height:430px;margin:0 auto;border-radius:22px;overflow:hidden}.salon-page .salon-panel{border-radius:0 0 24px 24px}}</style>

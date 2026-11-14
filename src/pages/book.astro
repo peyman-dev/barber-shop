@@ -1,0 +1,8 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import BookingFlow from '@/features/booking/BookingFlow';
+---
+<MainLayout title="Book an appointment | Barberly" description="Choose a barber, service and time for your appointment." active="bookings">
+  <div class="shell page-content book-page"><div class="page-heading"><a class="back-button" href="/salon/classic-cuts" aria-label="Back to shop">‹</a><h1>Book an appointment</h1><span class="heading-spacer"></span></div><p class="book-intro">Choose a service, a barber and a time that works for you.</p><BookingFlow client:load /></div>
+</MainLayout>
+<style>.book-page{padding-top:28px}.book-intro{margin:-14px 0 20px;color:#7f8a9e}.book-intro span{padding:0 6px;color:#c2c8d2}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%);font-size:20px}.back-button{display:grid;place-items:center;width:44px;height:44px;background:white;border-radius:50%;font-size:29px;line-height:1}.heading-spacer{width:44px}@media(min-width:768px){.book-page{max-width:900px;padding-top:35px}.page-heading h1{position:static;transform:none;font-size:24px}.heading-spacer{display:none}.page-heading{justify-content:flex-start;gap:16px}.book-intro{margin:0 0 20px 60px}}</style>

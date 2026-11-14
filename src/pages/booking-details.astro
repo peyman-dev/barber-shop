@@ -1,0 +1,50 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+---
+<MainLayout title="Booking details | Barberly" description="Review appointment, service and pricing details." active="bookings" showBottomNav={false}>
+  <div class="shell page-content details-page">
+    <div class="page-heading"><a class="back-button" href="/bookings" aria-label="Back to bookings">‹</a><h1>Booking Details</h1><div class="options-wrap"><button class="icon-button more-button" id="options-toggle" aria-label="More booking options" aria-haspopup="menu" aria-expanded="false">⋮</button><div class="options-menu" id="options-menu" role="menu" hidden><button role="menuitem" id="menu-invoice">View invoice</button><a role="menuitem" href="/bookings">Back to bookings</a></div></div></div>
+    <article class="card details-card">
+      <div class="business-summary"><img src="/images/classic-haircut.jpg" alt="Barber at Classic Cuts" width="74" height="74"/><div><h2>Royal Blade Barbershop</h2><p>Professional grooming, made personal.</p></div></div>
+      <h3>Your Order</h3><dl><div><dt>Services</dt><dd>Haircut &amp; Coloring</dd></div><div><dt>Specialist</dt><dd>Alexander Scott</dd></div><div><dt>Date</dt><dd>Sunday, December 20, 2025</dd></div></dl>
+      <h3>Price Details</h3><dl><div><dt>Price</dt><dd>$36.00</dd></div><div><dt>Fee</dt><dd>$1.00</dd></div><div class="total"><dt>Total Price</dt><dd>$37.00</dd></div></dl>
+    </article>
+    <div class="details-actions"><button class="button invoice-button" id="invoice-open">View Invoice</button><button class="text-link cancel-link" id="cancel-open">Cancel Booking</button><p class="cancel-feedback" role="status" hidden></p></div>
+    <dialog class="details-dialog" id="cancel-dialog"><div class="warning-icon">!</div><h2>Cancel Booking</h2><p>Are you sure you want to cancel your barber shop booking?</p><div class="dialog-actions"><button class="button button-outline" id="cancel-dismiss">Keep booking</button><button class="button" id="cancel-confirm">Confirm</button></div></dialog>
+    <dialog class="details-dialog invoice-dialog" id="invoice-dialog"><h2>Booking invoice</h2><p>Royal Blade Barbershop · December 20, 2025</p><dl><div><dt>Haircut &amp; Coloring</dt><dd>$36.00</dd></div><div><dt>Service fee</dt><dd>$1.00</dd></div><div class="total"><dt>Total</dt><dd>$37.00</dd></div></dl><p class="invoice-note">This invoice is a preview. No payment was processed.</p><button class="button" id="invoice-dismiss">Done</button></dialog>
+  </div>
+</MainLayout>
+<script>
+  const cancelDialog = document.querySelector<HTMLDialogElement>('#cancel-dialog');
+  const invoiceDialog = document.querySelector<HTMLDialogElement>('#invoice-dialog');
+  document.querySelector('#cancel-open')?.addEventListener('click', () => cancelDialog?.showModal());
+  document.querySelector('#cancel-dismiss')?.addEventListener('click', () => cancelDialog?.close());
+  document.querySelector('#cancel-confirm')?.addEventListener('click', () => {
+    cancelDialog?.close();
+    const feedback = document.querySelector<HTMLElement>('.cancel-feedback');
+    if (feedback) {
+      feedback.hidden = false;
+      feedback.textContent = 'No cancellation was sent. Connect a booking provider to manage this appointment.';
+    }
+  });
+  const optionsToggle = document.querySelector<HTMLButtonElement>('#options-toggle');
+  const optionsMenu = document.querySelector<HTMLElement>('#options-menu');
+  optionsToggle?.addEventListener('click', () => {
+    const expanded = optionsToggle.getAttribute('aria-expanded') === 'true';
+    optionsToggle.setAttribute('aria-expanded', String(!expanded));
+    if (optionsMenu) optionsMenu.hidden = expanded;
+  });
+  document.querySelector('#menu-invoice')?.addEventListener('click', () => {
+    if (optionsMenu) optionsMenu.hidden = true;
+    optionsToggle?.setAttribute('aria-expanded', 'false');
+    invoiceDialog?.showModal();
+  });
+  document.querySelector('#invoice-open')?.addEventListener('click', () => invoiceDialog?.showModal());
+  document.querySelector('#invoice-dismiss')?.addEventListener('click', () => invoiceDialog?.close());
+  [cancelDialog, invoiceDialog].forEach((dialog) => dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  }));
+</script>
+<style>
+.details-page{padding-top:28px}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%)}.back-button{display:grid;place-items:center;width:44px;height:44px;background:white;border-radius:50%;font-size:29px;line-height:1}.more-button{font-size:24px}.options-wrap{position:relative}.options-menu{position:absolute;z-index:8;right:0;top:54px;display:grid;min-width:160px;padding:6px;border:1px solid #edf0f3;border-radius:12px;background:#fff;box-shadow:0 12px 32px #19273b1a}.options-menu[hidden]{display:none}.options-menu a,.options-menu button{padding:10px 12px;border:0;border-radius:8px;background:white;color:#27313d;text-align:left;font-size:13px}.options-menu a:hover,.options-menu button:hover{background:#f4f7f9}.details-card{padding:18px}.business-summary{display:flex;align-items:center;gap:14px;margin-bottom:18px}.business-summary img{width:74px;height:74px;object-fit:cover;border-radius:12px}.business-summary h2{font-size:15px;margin:0 0 5px}.business-summary p{margin:0;color:#8791a2;font-size:13px}.details-card h3{margin:16px 0 8px;font-size:14px}.details-card dl,.invoice-dialog dl{margin:0}.details-card dl>div,.invoice-dialog dl>div{display:flex;justify-content:space-between;gap:18px;padding:6px 0}.details-card dt,.invoice-dialog dt{color:#8791a2}.details-card dd,.invoice-dialog dd{margin:0;text-align:right}.details-card .total{color:#171a20}.details-actions{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(calc(100% - 48px),680px);display:grid;gap:14px;z-index:5}.invoice-button{width:100%;min-height:54px}.cancel-link{background:none;border:0;padding:2px;color:#48858c;font-weight:650}.cancel-feedback{margin:0;padding:10px 12px;border-radius:10px;background:#fff7e8;color:#6f5b36;font-size:12px}.details-dialog{position:fixed;inset:0;margin:auto;width:min(calc(100% - 48px),420px);padding:35px 24px 28px;border:0;border-radius:25px;background:#fff;text-align:center;box-shadow:0 20px 70px #10172425}.details-dialog::backdrop{background:#10151cb0;backdrop-filter:blur(3px)}.warning-icon{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 24px;border:1px solid #eb3756;border-radius:50%;color:#e22d4d;font-size:44px;font-weight:700}.details-dialog h2{margin:0 0 8px;font-size:19px}.details-dialog>p{color:#7f8a9e}.dialog-actions{display:flex;gap:12px;margin-top:28px}.dialog-actions .button{flex:1;padding-inline:10px}.invoice-dialog{text-align:left}.invoice-dialog h2,.invoice-dialog>p{text-align:center}.invoice-dialog dl{margin:22px 0}.invoice-dialog dl>div{border-top:1px solid #e6e9ef;padding-block:12px}.invoice-dialog .total{font-weight:700;color:#171a20}.invoice-note{font-size:12px}.invoice-dialog>.button{width:100%}@media(max-width:767px){.details-page{padding-top:0}.page-heading{margin-bottom:22px}.details-card{padding:16px}.details-card h3{margin-top:15px}.details-actions{bottom:22px;width:calc(100% - 48px);gap:13px}.details-dialog{padding:32px 22px 27px}}
+</style>

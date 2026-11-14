@@ -1,0 +1,10 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import DiscoveryPanel from '@/features/discovery/DiscoveryPanel';
+import { salons } from '@/data/salons';
+---
+<MainLayout title="Haircut barbershops near you | Barberly" description="Browse haircut specialists nearby and compare salons, ratings and distance." active="services" showBottomNav={false}>
+  <div class="shell page-content category-page"><div class="page-heading"><a class="back-button" href="/" aria-label="Back home">‹</a><h1>Haircuts</h1><a class="icon-button" href="/explore" aria-label="Search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.3 4.3"/></svg></a></div><DiscoveryPanel client:load salons={salons} title="Barbershops for haircuts" /></div>
+</MainLayout>
+<style>.category-page{padding-top:28px}.back-button{display:grid;place-items:center;width:44px;height:44px;background:white;border-radius:50%;font-size:29px;line-height:1}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%)}.category-page .discovery-tools{display:none}@media(max-width:767px){.category-page{padding-top:0}.page-heading{margin-bottom:12px}.category-page .section-heading{display:none}}
+</style>

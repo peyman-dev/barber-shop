@@ -1,0 +1,19 @@
+---
+const { active = 'home' } = Astro.props;
+const links = [
+  { label: 'Home', href: '/', key: 'home' },
+  { label: 'Explore', href: '/explore', key: 'explore' },
+  { label: 'Services', href: '/services/haircuts', key: 'services' },
+  { label: 'Bookings', href: '/bookings', key: 'bookings' },
+];
+---
+<header class="topbar shell">
+  <a class="brand" href="/" aria-label="Barberly home"><span class="brand-mark" aria-hidden="true">B</span> barberly</a>
+  <nav class="desktop-nav" aria-label="Main navigation">
+    {links.map(link => <a class={active === link.key ? 'active' : ''} href={link.href}>{link.label}</a>)}
+  </nav>
+  <div class="top-actions">
+    <a class="icon-button" href="/notifications" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></a>
+    <a class="button" href="/salon/classic-cuts">Find a barber</a>
+  </div>
+</header>

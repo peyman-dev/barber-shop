@@ -1,0 +1,19 @@
+---
+import type { Salon } from '@/data/salons';
+const { salon } = Astro.props as { salon: Salon };
+---
+<a class="card salon-card" href={`/salon/${salon.slug}`} aria-label={`View ${salon.name}`}>
+  <img src={salon.image} alt={`A barber at ${salon.name}`} width="82" height="82" loading="lazy" />
+  <div class="salon-info">
+    <h3>{salon.name}</h3>
+    <p>{salon.address}</p>
+    <div class="meta-row">
+      <span class="meta-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 22s8-7.6 8-13a8 8 0 1 0-16 0c0 5.4 8 13 8 13Zm0-10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg>{salon.distance}</span>
+      <span class="meta-item"><svg class="rating-star" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8l-6.2 3.3L7 14.2l-5-4.9 6.9-1L12 2Z"/></svg>{salon.rating} ({salon.reviews} reviews)</span>
+    </div>
+  </div>
+</a>
+<style>
+ .salon-card { padding:14px; }
+ @media(max-width:767px) { .salon-card { gap:14px; padding:13px; } .salon-card img { width:78px;height:78px;flex-basis:78px; } .salon-info h3 { font-size:14px; } .salon-info p { font-size:13px; } .salon-info .meta-row { gap:7px 13px; font-size:13px; } }
+</style>

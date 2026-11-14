@@ -1,0 +1,22 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+const today = [
+  { time: '8:34 AM', text: 'Your upcoming appointment is all set. We look forward to seeing you at the shop.' },
+  { time: '8:34 AM', text: 'New appointment details are available in your bookings.' },
+  { time: '8:34 AM', text: 'A fresh service update from your local barbershop.' },
+];
+const yesterday = [
+  { time: '8:34 AM', text: 'Your recent visit is complete. Thanks for stopping by.' },
+  { time: '8:34 AM', text: 'Your booking details are ready whenever you need them.' },
+];
+---
+<MainLayout title="Notifications | Barberly" description="See the latest updates and reminders from Barberly." active="notifications" showBottomNav={false}>
+  <div class="shell page-content notifications-page">
+    <div class="page-heading"><a class="back-button" href="/" aria-label="Back home">‹</a><h1>Notifications</h1><span class="heading-spacer"></span></div>
+    <section><h2 class="day-heading">Today</h2><div class="notification-list">{today.map((notification) => <article class="card notification-card"><span class="notification-icon">🎉</span><div class="notification-copy"><div><h3>Notifications</h3><time>{notification.time}</time></div><p>{notification.text}</p></div></article>)}</div></section>
+    <section><h2 class="day-heading yesterday">Yesterday</h2><div class="notification-list">{yesterday.map((notification) => <article class="card notification-card"><span class="notification-icon">🎉</span><div class="notification-copy"><div><h3>Notifications</h3><time>{notification.time}</time></div><p>{notification.text}</p></div></article>)}</div></section>
+  </div>
+</MainLayout>
+<style>
+.notifications-page{padding-top:28px}.page-heading h1{position:absolute;left:50%;transform:translateX(-50%)}.heading-spacer{width:44px}.back-button{display:grid;place-items:center;width:44px;height:44px;background:white;border-radius:50%;font-size:29px;line-height:1}.day-heading{margin:24px 0 14px;color:#8792a4;font-size:13px;font-weight:600}.day-heading.yesterday{margin-top:28px}.notification-list{display:grid;gap:14px}.notification-card{display:flex;gap:14px;padding:14px;min-height:106px}.notification-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#edf3f4;font-size:22px;flex:none}.notification-copy{min-width:0;flex:1}.notification-copy>div{display:flex;justify-content:space-between;gap:12px}.notification-copy h3{margin:2px 0 9px;font-size:15px}.notification-copy time{color:#8590a4;font-size:12px;white-space:nowrap}.notification-copy p{margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#818da1;line-height:1.6}@media(max-width:767px){.notifications-page{padding-top:0}.page-heading{margin-bottom:26px}.day-heading{margin:0 0 14px}.day-heading.yesterday{margin-top:28px}.notification-list{gap:14px}.notification-card{min-height:106px;padding:14px}.notification-icon{width:48px;height:48px}.notification-copy h3{font-size:14px;margin-top:2px}.notification-copy p{font-size:13px}}
+</style>
